@@ -1,35 +1,32 @@
 import { useEffect, useState } from "react";
-import LineChartComponent from "../../../components/charts/LineChartComponents";
+import BarChartComponents from "../../../components/charts/BarChartComponents";
 import { fetchCsvData } from "../../../utils/fetchCsvData";
-import { formatMonth } from "../../../utils/dateUtils";
 
 type DataPoint = {
-  month: string;
+  province: string;
   count: number;
-  percentage: number;
 };
 
 const parseRow = (row: unknown): DataPoint => {
   if (
     typeof row === "object" &&
     row !== null &&
-    "month" in row &&
+    "prov" in row &&
     "count" in row
   ) {
     return {
-      month: formatMonth((row as any).month),
-      count: Number((row as any).count),
-      percentage: Number((row as any).percentage),
+      province: String((row as unknown).prov),
+      count: Number((row as unknown).count),
     };
   }
   throw new Error("Invalid data format");
 };
 
-function OverviewsEventPerMonthChart() {
+function OverviewsEventPerProvinceChart() {
   const [chartData, setChartData] = useState<DataPoint[]>([]);
 
   useEffect(() => {
-    fetchCsvData<DataPoint>("/data/2024_month_event_counts.csv", parseRow)
+    fetchCsvData<DataPoint>("/data/2024_province_event_counts.csv", parseRow)
       .then(setChartData)
       .catch((error) => {
         console.error("Failed to load chart data:", error);
@@ -37,34 +34,22 @@ function OverviewsEventPerMonthChart() {
   }, []);
 
   return (
-    <LineChartComponent
+    <BarChartComponents
       data={chartData}
-      lines={[
+      bars={[
         {
           dataKey: "count",
-          stroke: "#3B82F6", // Modern blue
+          fill: "#10B981", // Modern green
           name: "Event Count",
-          strokeWidth: 3,
-          dot: {
-            fill: "#3B82F6",
-            strokeWidth: 2,
-            r: 6,
-            stroke: "#ffffff",
-          },
-          activeDot: {
-            r: 8,
-            fill: "#1D4ED8",
-            stroke: "#ffffff",
-            strokeWidth: 3,
-            filter: "drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))",
-          },
+          radius: [4, 4, 0, 0],
+          stroke: "#10B981",
+          strokeWidth: 1,
         },
       ]}
-      xAxisKey="month"
+      xAxisKey="province"
       height={400}
-      title=""
+      top={10}
       tooltip={{
-        enabled: true,
         formatter: (value, name) => [`${value.toLocaleString()} events`, name],
         contentStyle: {
           backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -74,7 +59,16 @@ function OverviewsEventPerMonthChart() {
           backdropFilter: "blur(10px)",
         },
       }}
-      legend={{ enabled: false }}
+      xAxis={{
+        angle: -45,
+        interval: 0,
+        tick: { fontSize: 11, fill: "#6B7280" },
+        tickFormatter: (value) =>
+          value.length > 8 ? `${value.slice(0, 8)}...` : value,
+      }}
+      yAxis={{
+        tick: { fontSize: 11, fill: "#6B7280" },
+      }}
       grid={{
         enabled: true,
         strokeDasharray: "3 3",
@@ -82,8 +76,13 @@ function OverviewsEventPerMonthChart() {
         opacity: 0.6,
       }}
       theme="light"
+      loading={chartData.length === 0}
+      // Add custom gradient definition
+      style={{
+        background: "linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%)",
+      }}
     />
   );
 }
 
-export default OverviewsEventPerMonthChart;
+export default OverviewsEventPerProvinceChart;
