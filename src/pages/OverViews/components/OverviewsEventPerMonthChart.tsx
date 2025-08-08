@@ -17,9 +17,9 @@ const parseRow = (row: unknown): DataPoint => {
     "count" in row
   ) {
     return {
-      month: formatMonth((row as any).month),
-      count: Number((row as any).count),
-      percentage: Number((row as any).percentage),
+      month: formatMonth((row as unknown).month),
+      count: Number((row as unknown).count),
+      percentage: Number((row as unknown).percentage),
     };
   }
   throw new Error("Invalid data format");

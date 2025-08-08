@@ -15,8 +15,8 @@ const parseRow = (row: unknown): DataPoint => {
     "count" in row
   ) {
     return {
-      hour: Number((row as any).hour),
-      count: Number((row as any).count),
+      hour: Number((row as unknown).hour),
+      count: Number((row as unknown).count),
     };
   }
   throw new Error("Invalid data format");

@@ -39,7 +39,7 @@ function OverviewsPage() {
           <OverViewsChartBox
             header="Time of Day Analysis"
             description="Identify peak hours for injury events"
-            headerClassName="text-green-700"
+            headerClassName="text-blue-700"
             style={{ minHeight: "500px" }}
           >
             <div style={{ height: "400px" }}>
@@ -52,10 +52,21 @@ function OverviewsPage() {
           <OverViewsChartBox
             header="Event Distribution by Age"
             description="Analyze injury events across different age groups"
-            headerClassName="text-purple-700"
+            headerClassName="text-blue-700"
           >
             <div style={{ height: "500px" }}>
               <OverviewsEventPerAgeChart />
+            </div>
+          </OverViewsChartBox>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
+          <OverViewsChartBox
+            header="Event Distribution by Province"
+            description="Visualize injury events across provinces in Thailand"
+            headerClassName="text-blue-700"
+          >
+            <div style={{ height: "400px" }}>
+              <OverviewsEventPerProvinceChart />
             </div>
           </OverViewsChartBox>
         </div>
