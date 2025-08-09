@@ -22,8 +22,32 @@ const parseRow = (row: unknown): DataPoint => {
   throw new Error("Invalid data format");
 };
 
+// Custom hook for responsive chart height
+const useResponsiveHeight = () => {
+  const [height, setHeight] = useState(400);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (window.innerWidth < 640) {
+        setHeight(250);
+      } else if (window.innerWidth < 1024) {
+        setHeight(320);
+      } else {
+        setHeight(400);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  return height;
+};
+
 function OverviewsEventPerTimeChart() {
   const [chartData, setChartData] = useState<DataPoint[]>([]);
+  const chartHeight = useResponsiveHeight();
 
   useEffect(() => {
     fetchCsvData<DataPoint>("/data/2024_time_event_counts.csv", parseRow)
@@ -40,7 +64,7 @@ function OverviewsEventPerTimeChart() {
         {
           dataKey: "count",
           stroke: "#8B5CF6", // Purple
-          name: "Hourly Events",
+          name: "Event Count",
           strokeWidth: 3,
           dot: {
             fill: "#8B5CF6",
@@ -58,11 +82,12 @@ function OverviewsEventPerTimeChart() {
         },
       ]}
       xAxisKey="hour"
-      height={400}
+      xAxisLabel="Hour of Day"
+      yAxisLabel="Number of Events"
+      height={chartHeight}
       tooltip={{
         enabled: true,
         formatter: (value, name) => [`${value.toLocaleString()} events`, name],
-        labelFormatter: (hour) => `${hour}:00`,
         contentStyle: {
           backgroundColor: "rgba(255, 255, 255, 0.95)",
           border: "none",
@@ -71,34 +96,12 @@ function OverviewsEventPerTimeChart() {
           backdropFilter: "blur(10px)",
         },
       }}
-      xAxis={{
-        tickFormatter: (value) => `${value}:00`,
-        tick: { fontSize: 11, fill: "#6B7280" },
-      }}
-      yAxis={{
-        tick: { fontSize: 11, fill: "#6B7280" },
-      }}
       grid={{
         enabled: true,
         strokeDasharray: "3 3",
         stroke: "#E5E7EB",
         opacity: 0.6,
       }}
-      // Add reference lines for business hours
-      referenceLines={[
-        {
-          value: 8,
-          stroke: "#F59E0B",
-          strokeDasharray: "5 5",
-          label: "Work Start",
-        },
-        {
-          value: 17,
-          stroke: "#EF4444",
-          strokeDasharray: "5 5",
-          label: "Peak Hour",
-        },
-      ]}
       theme="light"
     />
   );

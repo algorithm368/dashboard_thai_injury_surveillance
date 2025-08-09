@@ -14,6 +14,29 @@ type AgeGroupData = {
   range: string;
 };
 
+// Custom hook for responsive chart height
+const useResponsiveHeight = () => {
+  const [height, setHeight] = useState(400);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (window.innerWidth < 640) {
+        setHeight(250);
+      } else if (window.innerWidth < 1024) {
+        setHeight(320);
+      } else {
+        setHeight(400);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  return height;
+};
+
 const parseRow = (row: unknown): DataPoint => {
   if (
     typeof row === "object" &&
@@ -66,6 +89,7 @@ function OverviewsEventPerAgeChart() {
   const [chartData, setChartData] = useState<DataPoint[]>([]);
   const [viewMode, setViewMode] = useState<"detailed" | "grouped">("grouped");
   const [loading, setLoading] = useState(true);
+  const chartHeight = useResponsiveHeight();
 
   useEffect(() => {
     setLoading(true);
@@ -128,7 +152,7 @@ function OverviewsEventPerAgeChart() {
   return (
     <div className="w-full">
       {/* Controls and Statistics */}
-      <div className="mb-4 space-y-3">
+      <div className="mb-4 space-y-3 sm:">
         {/* View Mode Toggle */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -193,21 +217,9 @@ function OverviewsEventPerAgeChart() {
             },
           ]}
           xAxisKey="ageGroup"
-          height={400}
-          tooltip={{
-            formatter: (value, name) => [
-              `${value.toLocaleString()} events`,
-              name,
-            ],
-            labelFormatter: (label) => {
-              const item = processedData.find((d) => d.ageGroup === label);
-              return item ? `${label} (${item.range})` : label;
-            },
-          }}
-          xAxis={{
-            angle: -45,
-            interval: 0,
-          }}
+          xAxisLabel="Age Group"
+          yAxisLabel="Number of Events"
+          height={chartHeight}
           theme="light"
         />
       ) : (
@@ -223,23 +235,17 @@ function OverviewsEventPerAgeChart() {
             },
           ]}
           xAxisKey="age"
-          height={400}
-          title=""
+          xAxisLabel="Age (Years)"
+          yAxisLabel="Number of Events"
+          height={chartHeight}
           tooltip={{
+            enabled: true,
             formatter: (value, name) => [
               `${value.toLocaleString()} events`,
               name,
             ],
-            labelFormatter: (age) => `Age: ${age} years`,
-          }}
-          xAxis={{
-            tickFormatter: (value) => `${value}y`,
-          }}
-          yAxis={{
-            tickFormatter: (value) => value.toLocaleString(),
           }}
           theme="light"
-          brush={{ enabled: true, height: 40 }}
         />
       )}
     </div>

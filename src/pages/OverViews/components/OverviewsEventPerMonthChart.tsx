@@ -25,8 +25,32 @@ const parseRow = (row: unknown): DataPoint => {
   throw new Error("Invalid data format");
 };
 
+// Custom hook for responsive chart height
+const useResponsiveHeight = () => {
+  const [height, setHeight] = useState(400);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (window.innerWidth < 640) {
+        setHeight(250);
+      } else if (window.innerWidth < 1024) {
+        setHeight(320);
+      } else {
+        setHeight(400);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  return height;
+};
+
 function OverviewsEventPerMonthChart() {
   const [chartData, setChartData] = useState<DataPoint[]>([]);
+  const chartHeight = useResponsiveHeight();
 
   useEffect(() => {
     fetchCsvData<DataPoint>("/data/2024_month_event_counts.csv", parseRow)
@@ -61,8 +85,9 @@ function OverviewsEventPerMonthChart() {
         },
       ]}
       xAxisKey="month"
-      height={400}
-      title=""
+      xAxisLabel="Month"
+      yAxisLabel="Number of Events"
+      height={chartHeight}
       tooltip={{
         enabled: true,
         formatter: (value, name) => [`${value.toLocaleString()} events`, name],
