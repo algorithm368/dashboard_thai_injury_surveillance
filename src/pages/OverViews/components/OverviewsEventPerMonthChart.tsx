@@ -54,7 +54,7 @@ function OverviewsEventPerMonthChart() {
   const chartHeight = useResponsiveHeight();
 
   useEffect(() => {
-    fetchCsvData<DataPoint>("/projects/dashboard/injury/2024/data/2024_month_event_counts.csv", parseRow)
+    fetchCsvData<DataPoint>("/dashboard_thai_injury_surveillance/data/2024_month_event_counts.csv", parseRow)
       .then(setChartData)
       .catch((error) => {
         console.error("Failed to load chart data:", error);

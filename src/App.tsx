@@ -11,7 +11,7 @@ function App() {
         <main className="pb-4 sm:pb-6">
           <Routes>
             <Route
-              path="/projects/dashboard/injury/2024"
+              path="/dashboard_thai_injury_surveillance"
               element={<OverviewsPage />}
             />
           </Routes>

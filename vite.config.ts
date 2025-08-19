@@ -4,6 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/projects/dashboard/injury/2024",
+  base: "/dashboard_thai_injury_surveillance",
   plugins: [react(), tailwindcss()],
 });

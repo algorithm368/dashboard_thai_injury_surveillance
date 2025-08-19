@@ -90,7 +90,7 @@ function OverviewsEventPerAgeChart() {
   useEffect(() => {
     setLoading(true);
     fetchCsvData<DataPoint>(
-      "/projects/dashboard/injury/2024/data/2024_age_event_counts.csv",
+      "/dashboard_thai_injury_surveillance/data/2024_age_event_counts.csv",
       parseRow
     )
       .then((data) => {
