@@ -30,23 +30,19 @@ const useResponsiveHeight = () => {
     };
 
     updateHeight();
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
   return height;
 };
 
 const parseRow = (row: unknown): DataPoint => {
-  if (
-    typeof row === "object" &&
-    row !== null &&
-    "age" in row &&
-    "count" in row
-  ) {
+  const r = row as { age?: unknown; count?: unknown };
+  if (typeof row === "object" && row !== null && "age" in r && "count" in r) {
     return {
-      age: Number((row as unknown).age),
-      count: Number((row as unknown).count),
+      age: Number(r.age),
+      count: Number(r.count),
     };
   }
   throw new Error("Invalid data format");
@@ -93,10 +89,15 @@ function OverviewsEventPerAgeChart() {
 
   useEffect(() => {
     setLoading(true);
-    fetchCsvData<DataPoint>("/data/2024_age_event_counts.csv", parseRow)
+    fetchCsvData<DataPoint>(
+      "/projects/dashboard/injury/2024/data/2024_age_event_counts.csv",
+      parseRow
+    )
       .then((data) => {
         // Sort by age for better visualization
-        const sortedData = data.toSorted((a, b) => a.age - b.age);
+        const sortedData = data
+          .slice()
+          .sort((a: DataPoint, b: DataPoint) => a.age - b.age);
         setChartData(sortedData);
         setLoading(false);
       })

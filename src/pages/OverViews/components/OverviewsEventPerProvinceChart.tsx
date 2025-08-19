@@ -8,15 +8,16 @@ type DataPoint = {
 };
 
 const parseRow = (row: unknown): DataPoint => {
+  const r = row as { prov?: unknown; count?: unknown };
   if (
     typeof row === "object" &&
     row !== null &&
-    "prov" in row &&
-    "count" in row
+    "prov" in r &&
+    "count" in r
   ) {
     return {
-      province: String((row as unknown).prov),
-      count: Number((row as unknown).count),
+      province: String(r.prov),
+      count: Number(r.count),
     };
   }
   throw new Error("Invalid data format");
@@ -50,7 +51,7 @@ function OverviewsEventPerProvinceChart() {
   const chartHeight = useResponsiveHeight();
 
   useEffect(() => {
-    fetchCsvData<DataPoint>("/data/2024_province_event_counts.csv", parseRow)
+    fetchCsvData<DataPoint>("/projects/dashboard/injury/2024/data/2024_province_event_counts.csv", parseRow)
       .then(setChartData)
       .catch((error) => {
         console.error("Failed to load chart data:", error);

@@ -53,38 +53,58 @@ function BarChartComponents({
   theme = "light",
 }: Readonly<BarChartComponentProps>) {
   const chartData = top
-    ? data.toSorted((a, b) => Number(b.count) - Number(a.count)).slice(0, top)
+    ? data
+        .slice()
+        .sort((a, b) => Number(b.count) - Number(a.count))
+        .slice(0, top)
     : data;
 
   return (
-    <div className="bar-chart-container w-full" style={{ height: `${height}px` }}>
+    <div
+      className="bar-chart-container w-full"
+      style={{ height: `${height}px` }}
+    >
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart 
+        <BarChart
           data={chartData}
           margin={{ top: 20, right: 20, left: 60, bottom: 80 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
+          <XAxis
             dataKey={xAxisKey}
-            tick={{ fontSize: 12, fill: theme === "dark" ? "#ffffff" : "#374151" }}
+            tick={{
+              fontSize: 12,
+              fill: theme === "dark" ? "#ffffff" : "#374151",
+            }}
             tickLine={{ stroke: theme === "dark" ? "#ffffff" : "#374151" }}
             axisLine={{ stroke: theme === "dark" ? "#ffffff" : "#374151" }}
-            label={{ 
-              value: xAxisLabel || "", 
-              position: "insideBottomLeft", 
+            label={{
+              value: xAxisLabel || "",
+              position: "insideBottomLeft",
               offset: -5,
-              style: { textAnchor: "middle", fontSize: "14px", fontWeight: "500" }
+              style: {
+                textAnchor: "middle",
+                fontSize: "14px",
+                fontWeight: "500",
+              },
             }}
           />
-          <YAxis 
-            tick={{ fontSize: 12, fill: theme === "dark" ? "#ffffff" : "#374151" }}
+          <YAxis
+            tick={{
+              fontSize: 12,
+              fill: theme === "dark" ? "#ffffff" : "#374151",
+            }}
             tickLine={{ stroke: theme === "dark" ? "#ffffff" : "#374151" }}
             axisLine={{ stroke: theme === "dark" ? "#ffffff" : "#374151" }}
-            label={{ 
-              value: yAxisLabel || "", 
-              angle: -90, 
+            label={{
+              value: yAxisLabel || "",
+              angle: -90,
               position: "insideLeft",
-              style: { textAnchor: "middle", fontSize: "14px", fontWeight: "500" }
+              style: {
+                textAnchor: "middle",
+                fontSize: "14px",
+                fontWeight: "500",
+              },
             }}
           />
           <Tooltip />
@@ -97,14 +117,30 @@ function BarChartComponents({
               stroke={borderOnly ? bar.fill : "none"}
               strokeWidth={borderOnly ? 2 : 0}
               name={bar.name}
-              onClick={onClick}
-              onMouseEnter={onMouseEnter}
+              onClick={
+                onClick
+                  ? (data) => {
+                      if (data?.payload) {
+                        onClick(data.payload as DataPoint);
+                      }
+                    }
+                  : undefined
+              }
+              onMouseEnter={
+                onMouseEnter
+                  ? (data) => {
+                      if (data?.payload) {
+                        onMouseEnter(data.payload as DataPoint);
+                      }
+                    }
+                  : undefined
+              }
               onMouseLeave={onMouseLeave}
               style={{ cursor: onClick ? "pointer" : "default" }}
             >
               {chartData.map((entry) => (
-                <Cell 
-                  key={`cell-${entry[xAxisKey]}`} 
+                <Cell
+                  key={`cell-${entry[xAxisKey]}`}
                   fill={borderOnly ? "transparent" : bar.fill}
                   stroke={borderOnly ? bar.fill : "none"}
                   strokeWidth={borderOnly ? 2 : 0}

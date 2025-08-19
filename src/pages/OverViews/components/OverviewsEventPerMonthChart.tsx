@@ -10,16 +10,17 @@ type DataPoint = {
 };
 
 const parseRow = (row: unknown): DataPoint => {
+  const r = row as { month?: unknown; count?: unknown; percentage?: unknown };
   if (
     typeof row === "object" &&
     row !== null &&
-    "month" in row &&
-    "count" in row
+    "month" in r &&
+    "count" in r
   ) {
     return {
-      month: formatMonth((row as unknown).month),
-      count: Number((row as unknown).count),
-      percentage: Number((row as unknown).percentage),
+      month: formatMonth(r.month as string),
+      count: Number(r.count),
+      percentage: Number(r.percentage),
     };
   }
   throw new Error("Invalid data format");
@@ -53,7 +54,7 @@ function OverviewsEventPerMonthChart() {
   const chartHeight = useResponsiveHeight();
 
   useEffect(() => {
-    fetchCsvData<DataPoint>("/data/2024_month_event_counts.csv", parseRow)
+    fetchCsvData<DataPoint>("/projects/dashboard/injury/2024/data/2024_month_event_counts.csv", parseRow)
       .then(setChartData)
       .catch((error) => {
         console.error("Failed to load chart data:", error);

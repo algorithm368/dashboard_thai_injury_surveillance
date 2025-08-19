@@ -8,15 +8,16 @@ type DataPoint = {
 };
 
 const parseRow = (row: unknown): DataPoint => {
+  const r = row as { hour?: unknown; count?: unknown };
   if (
     typeof row === "object" &&
     row !== null &&
-    "hour" in row &&
-    "count" in row
+    "hour" in r &&
+    "count" in r
   ) {
     return {
-      hour: Number((row as unknown).hour),
-      count: Number((row as unknown).count),
+      hour: Number(r.hour),
+      count: Number(r.count),
     };
   }
   throw new Error("Invalid data format");
@@ -50,7 +51,7 @@ function OverviewsEventPerTimeChart() {
   const chartHeight = useResponsiveHeight();
 
   useEffect(() => {
-    fetchCsvData<DataPoint>("/data/2024_time_event_counts.csv", parseRow)
+    fetchCsvData<DataPoint>("/projects/dashboard/injury/2024/data/2024_time_event_counts.csv", parseRow)
       .then(setChartData)
       .catch((error) => {
         console.error("Failed to load chart data:", error);

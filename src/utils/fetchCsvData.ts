@@ -15,9 +15,13 @@ import { csvParse } from "d3-dsv";
  * @param parser: a function that transforms each row of the csv into the desired format
  * @returns: an array of the parsed data
  */
-export async function fetchCsvData<T>(
+export async function fetchCsvData<T extends object>(
   url: string,
-  parser: (d: unknown) => T
+  parser: (
+    rawRow: import("d3-dsv").DSVRowString<string>,
+    index: number,
+    columns: string[]
+  ) => T | null | undefined
 ): Promise<T[]> {
   /**
    * This line says:

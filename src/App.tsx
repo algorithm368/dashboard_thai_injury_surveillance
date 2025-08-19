@@ -1,7 +1,6 @@
-import React from "react";
+// ...existing code...
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import OverviewsPage from "./pages/OverViews/OverViewsPage";
-import TestPages from "./pages/Tests/TestPages";
 import Navbar from "./layouts/Navbar/Navbar";
 
 function App() {
@@ -11,8 +10,10 @@ function App() {
         <Navbar />
         <main className="pb-4 sm:pb-6">
           <Routes>
-            <Route path="/" element={<OverviewsPage />} />
-            <Route path="/tests" element={<TestPages />} />
+            <Route
+              path="/projects/dashboard/injury/2024"
+              element={<OverviewsPage />}
+            />
           </Routes>
         </main>
       </div>

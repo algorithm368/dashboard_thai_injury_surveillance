@@ -64,7 +64,7 @@ export const parseGenericDataRow = <T>(
   }
 
   // Build the output object
-  const result: unknown = {};
+  const result: Record<string, unknown> = {};
 
   for (const [outputField, config] of Object.entries(fieldMapping)) {
     const sourceValue = rowData[config.sourceField];
@@ -85,9 +85,18 @@ export const parseMonthDataRow = (row: unknown): MonthDataPoint => {
   return parseGenericDataRow<MonthDataPoint>(
     row,
     {
-      month: { sourceField: "month", transform: formatMonth },
-      count: { sourceField: "count", transform: Number },
-      percentage: { sourceField: "percentage", transform: Number },
+      month: {
+        sourceField: "month",
+        transform: (value: unknown) => formatMonth(String(value)),
+      },
+      count: {
+        sourceField: "count",
+        transform: (value: unknown) => Number(value),
+      },
+      percentage: {
+        sourceField: "percentage",
+        transform: (value: unknown) => Number(value),
+      },
     },
     ["month", "count", "percentage"]
   );
@@ -98,8 +107,14 @@ export const parseProvinceDataRow = (row: unknown): ProvinceDataPoint => {
   return parseGenericDataRow<ProvinceDataPoint>(
     row,
     {
-      province: { sourceField: "prov", transform: String },
-      count: { sourceField: "count", transform: Number },
+      province: {
+        sourceField: "prov",
+        transform: (value: unknown) => String(value),
+      },
+      count: {
+        sourceField: "count",
+        transform: (value: unknown) => Number(value),
+      },
     },
     ["province", "count"]
   );
@@ -110,8 +125,14 @@ export const parseTimeDataRow = (row: unknown): TimeDataPoint => {
   return parseGenericDataRow<TimeDataPoint>(
     row,
     {
-      time: { sourceField: "time", transform: String },
-      count: { sourceField: "count", transform: Number },
+      time: {
+        sourceField: "time",
+        transform: (value: unknown) => String(value),
+      },
+      count: {
+        sourceField: "count",
+        transform: (value: unknown) => Number(value),
+      },
     },
     ["time", "count"]
   );
@@ -122,8 +143,11 @@ export const parseAgeDataRow = (row: unknown): AgeDataPoint => {
   return parseGenericDataRow<AgeDataPoint>(
     row,
     {
-      age: { sourceField: "age", transform: String },
-      count: { sourceField: "count", transform: Number },
+      age: { sourceField: "age", transform: (value: unknown) => String(value) },
+      count: {
+        sourceField: "count",
+        transform: (value: unknown) => Number(value),
+      },
     },
     ["age", "count"]
   );
@@ -153,6 +177,6 @@ export const transforms = {
   formatMonth: (value: unknown) => formatMonth(String(value)),
   toUpperCase: (value: unknown) => String(value).toUpperCase(),
   toLowerCase: (value: unknown) => String(value).toLowerCase(),
-  parseFloat: (value: unknown) => parseFloat(value),
-  parseInt: (value: unknown) => parseInt(value, 10),
+  parseFloat: (value: unknown) => parseFloat(String(value)),
+  parseInt: (value: unknown) => parseInt(String(value), 10),
 };
