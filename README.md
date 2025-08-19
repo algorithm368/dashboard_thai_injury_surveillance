@@ -1,69 +1,66 @@
-# React + TypeScript + Vite
+# Thai Injury Surveillance Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web dashboard for visualizing injury surveillance data in Thailand. Built with React, TypeScript, Vite, and TailwindCSS.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Interactive charts (Bar, Line) for age, month, province, and time-based injury events
+- Responsive design with modern UI
+- Data loaded from CSV files
+- Easy deployment to GitHub Pages
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js (v18+ recommended)
+- npm
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm run dev
 ```
+
+### Build
+
+```sh
+npm run build
+```
+
+### Preview
+
+```sh
+npm run preview
+```
+
+## Deployment
+
+This project is configured for GitHub Pages. The base path is set to `/dashboard_thai_injury_surveillance` in `vite.config.ts`.
+
+## Project Structure
+
+- `src/` — Main source code
+  - `components/charts/` — Chart components
+  - `pages/OverViews/` — Overview pages and chart boxes
+  - `utils/` — Data parsing and utility functions
+- `public/data/` — CSV data files
+
+## Data Sources
+
+CSV files are located in `public/data/`:
+
+- `2024_age_event_counts.csv`
+- `2024_month_event_counts.csv`
+- `2024_province_event_counts.csv`
+- `2024_time_event_counts.csv`
+
+## License
+
+MIT
